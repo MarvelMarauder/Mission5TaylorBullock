@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission4TaylorBullock.Models;
 using System;
@@ -12,12 +13,12 @@ namespace Mission4TaylorBullock.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private MovieContext _blahContext { get; set; }
+        private MovieContext blahContext { get; set; }
 
         public HomeController(ILogger<HomeController> logger, MovieContext someName)
         {
             _logger = logger;
-            _blahContext = someName;
+            blahContext = someName;
         }
 
         public IActionResult Index()
@@ -34,10 +35,29 @@ namespace Mission4TaylorBullock.Controllers
         [HttpPost]
         public IActionResult Movies(MovieResponse mr)
         {
-            _blahContext.Add(mr);
-            _blahContext.SaveChanges();
+            blahContext.Add(mr);
+            blahContext.SaveChanges();
 
             return View("Confirmation", mr);
+        }
+
+        public IActionResult MovieList()
+        {
+            var movies = blahContext.Response
+                .OrderBy(i => i.Title)
+                .ToList();
+
+            return View(movies);
+        }
+
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
+        public IActionResult Delete()
+        {
+            return View();
         }
 
         public IActionResult Podcasts()

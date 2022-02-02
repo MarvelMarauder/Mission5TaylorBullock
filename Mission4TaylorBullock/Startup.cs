@@ -57,7 +57,7 @@ namespace Mission4TaylorBullock
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{movieid?}");
             });
         }
     }
