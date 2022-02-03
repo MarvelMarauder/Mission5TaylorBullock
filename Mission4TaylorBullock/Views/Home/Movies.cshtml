@@ -7,8 +7,13 @@
 <h2>We wouldn't mind you helping us increase our database of excellent movies! Just make sure to let us know if you've lent it to anyone; we'd like to know if you
     have it on you or not!</h2>
 <form method="post">
-    <label asp-for="Category">Category:</label>
-    <input type="text" asp-for="Category" /><br />
+    <label asp-for="CategoryID">Category:</label>
+    <select asp-for="CategoryID">
+        @foreach (Category c in ViewBag.Category)
+        {
+            <option value="@c.CategoryID">@c.CategoryName</option>
+        }
+    </select><br />
 
     <label asp-for="Title">Title:</label>
     <input type="text" asp-for="Title" /><br />
@@ -38,6 +43,7 @@
     <label asp-for="Notes">Notes:</label>
     <input type="text" asp-for="Notes" /><br />
 
-    <input type="submit"  value="Save Movie" />
+    <div asp-validation-summary="All"></div><br />
+    <input type="submit" value="Save Movie" />
 
 </form>

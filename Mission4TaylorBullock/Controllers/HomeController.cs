@@ -29,35 +29,72 @@ namespace Mission4TaylorBullock.Controllers
         [HttpGet]
         public IActionResult Movies()
         {
+            ViewBag.Category = blahContext.Categories.ToList();
             return View();
         }
 
         [HttpPost]
         public IActionResult Movies(MovieResponse mr)
         {
+            if (ModelState.IsValid)
+            {
             blahContext.Add(mr);
             blahContext.SaveChanges();
 
             return View("Confirmation", mr);
+            }
+            else //if invalid, send back to the form and see error messages
+            {
+                ViewBag.Category = blahContext.Categories.ToList();
+                return View(mr);
+            }
+
         }
 
         public IActionResult MovieList()
         {
             var movies = blahContext.Response
+                .Include(x => x.Category)
                 .OrderBy(i => i.Title)
                 .ToList();
 
             return View(movies);
         }
 
-        public IActionResult Edit()
+        [HttpGet]
+        public IActionResult Edit(int movieid)
         {
-            return View();
+            ViewBag.Category = blahContext.Categories.ToList();
+
+            var movie = blahContext.Response.Single(x => x.MovieID == movieid);
+
+            return View("Movies", movie);
         }
 
-        public IActionResult Delete()
+        [HttpPost]
+        public IActionResult Edit(MovieResponse edited_movie)
         {
-            return View();
+            blahContext.Update(edited_movie);
+            blahContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int movieid)
+        {
+            var to_delete = blahContext.Response.Single(x => x.MovieID == movieid);
+
+            return View(to_delete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(MovieResponse mv)
+        {
+            blahContext.Response.Remove(mv);
+            blahContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
         }
 
         public IActionResult Podcasts()
